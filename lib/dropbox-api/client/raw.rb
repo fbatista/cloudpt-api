@@ -27,23 +27,23 @@ module Dropbox
         connection.send(method, endpoint, action, data)
       end
 
-      add_method :get,  "/account/info",           :as => 'account', :root => false
+      add_method :get,  "/Storage/CloudPT/Account/Info",           :as => 'account', :root => false
 
-      add_method :get,  "/metadata/:root/:path",   :as => 'metadata'
-      add_method :post, "/delta",                  :as => 'delta', :root => false
-      add_method :get,  "/revisions/:root/:path",  :as => 'revisions'
-      add_method :post, "/restore/:root/:path",    :as => 'restore'
-      add_method :get,  "/search/:root/:path",     :as => 'search'
-      add_method :post, "/shares/:root/:path",     :as => 'shares'
-      add_method :post, "/media/:root/:path",      :as => 'media'
+      add_method :get,  "/Storage/CloudPT/Metadata/:root/:path",   :as => 'metadata'
+      add_method :post, "/Storage/CloudPT/Delta",                  :as => 'delta', :root => false
+      add_method :get,  "/Storage/CloudPT/Revisions/:root/:path",  :as => 'revisions'
+      add_method :post, "/Storage/CloudPT/Restore/:root/:path",    :as => 'restore'
+      add_method :get,  "/Storage/CloudPT/Search/:root/:path",     :as => 'search'
+      add_method :post, "/Storage/CloudPT/Shares/:root/:path",     :as => 'shares'
+      add_method :post, "/Storage/CloudPT/Media/:root/:path",      :as => 'media'
 
-      add_method :get_raw, "/thumbnails/:root/:path", :as => 'thumbnails', :endpoint => :content
+      add_method :get_raw, "/Storage/CloudPT/Thumbnails/:root/:path", :as => 'thumbnails', :endpoint => :content
 
-      add_method :post, "/fileops/copy",           :as => "copy"
-      add_method :get,  "/copy_ref/:root/:path",   :as => 'copy_ref'
-      add_method :post, "/fileops/create_folder",  :as => "create_folder"
-      add_method :post, "/fileops/delete",         :as => "delete"
-      add_method :post, "/fileops/move",           :as => "move"
+      add_method :post, "/Storage/CloudPT/Copy",           :as => "copy"
+      add_method :get,  "/Storage/CloudPT/CopyRef/:root/:path",   :as => 'copy_ref'
+      add_method :post, "/Storage/CloudPT/CreateFolder",  :as => "create_folder"
+      add_method :post, "/Storage/CloudPT/Delete",         :as => "delete"
+      add_method :post, "/Storage/CloudPT/Move",           :as => "move"
 
     end
 

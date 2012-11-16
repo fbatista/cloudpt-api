@@ -1,4 +1,4 @@
-module Dropbox
+module Cloudpt
   module API
 
     class Object < Hashie::Mash
@@ -11,7 +11,7 @@ module Dropbox
       end
 
       def self.resolve_class(hash)
-        hash['is_dir'] == true ? Dropbox::API::Dir : Dropbox::API::File
+        hash['is_dir'] == true ? Cloudpt::API::Dir : Cloudpt::API::File
       end
 
       def self.convert(array_or_object, client)

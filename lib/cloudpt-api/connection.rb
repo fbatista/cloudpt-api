@@ -1,11 +1,11 @@
-require "dropbox-api/connection/requests"
+require "cloudpt-api/connection/requests"
 
-module Dropbox
+module Cloudpt
   module API
 
     class Connection
 
-      include Dropbox::API::Connection::Requests
+      include Cloudpt::API::Connection::Requests
 
       attr_accessor :consumers
       attr_accessor :tokens
@@ -14,9 +14,9 @@ module Dropbox
         @options   = options
         @consumers = {}
         @tokens    = {}
-        Dropbox::API::Config.endpoints.each do |endpoint, url|
-          @consumers[endpoint] = Dropbox::API::OAuth.consumer(endpoint)
-          @tokens[endpoint]    = Dropbox::API::OAuth.access_token(@consumers[endpoint], options)
+        Cloudpt::API::Config.endpoints.each do |endpoint, url|
+          @consumers[endpoint] = Cloudpt::API::OAuth.consumer(endpoint)
+          @tokens[endpoint]    = Cloudpt::API::OAuth.access_token(@consumers[endpoint], options)
         end
       end
 

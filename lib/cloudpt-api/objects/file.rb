@@ -1,13 +1,13 @@
-module Dropbox
+module Cloudpt
   module API
 
-    class File < Dropbox::API::Object
+    class File < Cloudpt::API::Object
 
-      include Dropbox::API::Fileops
+      include Cloudpt::API::Fileops
 
       def revisions(options = {})
         response = client.raw.revisions({ :path => self.path }.merge(options))
-        Dropbox::API::Object.convert(response, client)
+        Cloudpt::API::Object.convert(response, client)
       end
 
       def restore(rev, options = {})
@@ -17,12 +17,12 @@ module Dropbox
 
       def share_url(options = {})
         response = client.raw.shares({ :path => self.path }.merge(options))
-        Dropbox::API::Object.init(response, client)
+        Cloudpt::API::Object.init(response, client)
       end
 
       def direct_url(options = {})
         response = client.raw.media({ :path => self.path }.merge(options))
-        Dropbox::API::Object.init(response, client)
+        Cloudpt::API::Object.init(response, client)
       end
 
       def thumbnail(options = {})
@@ -31,7 +31,7 @@ module Dropbox
       
       def copy_ref(options = {})
         response = client.raw.copy_ref({ :path => self.path }.merge(options))
-        Dropbox::API::Object.init(response, client)
+        Cloudpt::API::Object.init(response, client)
       end
       
       def download

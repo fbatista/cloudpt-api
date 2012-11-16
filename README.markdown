@@ -1,11 +1,11 @@
-Dropbox::API - Dropbox Ruby API client
+Cloudpt::API - Cloudpt Ruby API client
 =========
 
-A Ruby client for the DropBox REST API.
+A Ruby client for the Cloudpt REST API.
 
 Goal:
 
-To deliver a more Rubyesque experience when using the DropBox API.
+To deliver a more Rubyesque experience when using the Cloudpt API.
 
 Current state:
 
@@ -14,86 +14,86 @@ First release, whole API covered.
 Important!!!
 ------------
 
-From version 0.2.0, Dropbox::API::File#delete and Dropbox::API::Dir#delete *are gone*!!
+From version 0.2.0, Cloudpt::API::File#delete and Cloudpt::API::Dir#delete *are gone*!!
 
 The reason is that it's based on Hashie::Mash and was screwing Hash#delete.
 
-It is replaced with Dropbox::API::File#destroy and Dropbox::API::Dir#destroy.
+It is replaced with Cloudpt::API::File#destroy and Cloudpt::API::Dir#destroy.
 
 Installation
 ------------
 
-Dropbox::API is available on RubyGems, so:
+Cloudpt::API is available on RubyGems, so:
 
 ```
-gem install dropbox-api
+gem install Cloudpt-api
 ```
 
 Or in your Gemfile:
 
 ```ruby
-gem "dropbox-api"
+gem "Cloudpt-api"
 ```
 
 Configuration
 -------------
 
-In order to use this client, you need to have an app created on https://www.dropbox.com/developers/apps.
+In order to use this client, you need to have an app created on https://www.Cloudpt.com/developers/apps.
 
 Once you have it, put this configuration somewhere in your code, before you start working with the client.
 
 ```ruby
-Dropbox::API::Config.app_key    = YOUR_APP_TOKEN
-Dropbox::API::Config.app_secret = YOUR_APP_SECRET
-Dropbox::API::Config.mode       = "sandbox" # if you have a single-directory app or "dropbox" if it has access to the whole dropbox
+Cloudpt::API::Config.app_key    = YOUR_APP_TOKEN
+Cloudpt::API::Config.app_secret = YOUR_APP_SECRET
+Cloudpt::API::Config.mode       = "sandbox" # if you have a single-directory app or "Cloudpt" if it has access to the whole Cloudpt
 ```
 
-Dropbox::API::Client
+Cloudpt::API::Client
 --------------------
 
 The client is the base for all communication with the API and wraps around almost all calls
 available in the API.
 
-In order to create a Dropbox::API::Client object, you need to have the configuration set up for OAuth.
+In order to create a Cloudpt::API::Client object, you need to have the configuration set up for OAuth.
 Second thing you need is to have the user authorize your app using OAuth. Here's a short intro
 on how to do this:
 
 ```ruby
-consumer = Dropbox::API::OAuth.consumer(:authorize)
+consumer = Cloudpt::API::OAuth.consumer(:authorize)
 request_token = consumer.get_request_token
 request_token.authorize_url(:oauth_callback => 'http://yoursite.com/callback')
-# Here the user goes to Dropbox, authorizes the app and is redirected
+# Here the user goes to Cloudpt, authorizes the app and is redirected
 # The oauth_token will be available in the params
 request_token.get_access_token(:oauth_verifier => oauth_token)
 ```
 
-Now that you have the oauth token and secret, you can create a new instance of the Dropbox::API::Client, like this:
+Now that you have the oauth token and secret, you can create a new instance of the Cloudpt::API::Client, like this:
 
 ```ruby
-client = Dropbox::API::Client.new :token => token, :secret => secret
+client = Cloudpt::API::Client.new :token => token, :secret => secret
 ```
 
 Rake-based authorization
 ------------------------
 
-Dropbox::API supplies you with a helper rake which will authorize a single client. This is useful for development and testing.
+Cloudpt::API supplies you with a helper rake which will authorize a single client. This is useful for development and testing.
 
 In order to have this rake available, put this on your Rakefile:
 
 ```ruby
-require "dropbox-api/tasks"
-Dropbox::API::Tasks.install
+require "Cloudpt-api/tasks"
+Cloudpt::API::Tasks.install
 ```
 
-You will notice that you have a new rake task - dropbox:authorize
+You will notice that you have a new rake task - Cloudpt:authorize
 
-When you call this Rake task, it will ask you to provide the consumer key and secret. Afterwards it will present you with an authorize url on Dropbox.
+When you call this Rake task, it will ask you to provide the consumer key and secret. Afterwards it will present you with an authorize url on Cloudpt.
 
 Simply go to that url, authorize the app, then press enter in the console.
 
 The rake task will output valid ruby code which you can use to create a client.
 
-What differs this from the DropBox Ruby SDK?
+What differs this from the Cloudpt Ruby SDK?
 --------------------------------------------
 
 A few things:
@@ -107,94 +107,94 @@ This is how it would look using the SDK:
 
 ```ruby
 # Because you need the session with the right access token, you need to create one instance per user
-@session = DropboxSession.new(APP_TOKEN, APP_SECRET)
+@session = CloudptSession.new(APP_TOKEN, APP_SECRET)
 @session.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
-@client = DropboxClient.new(@session, :app_folder)
+@client = CloudptClient.new(@session, :app_folder)
 # The result is a hash, so we need to call a method on the client, supplying the right key from the hash
 @client.search('/', 'test.txt').each do |hash|
   @client.file_copy(hash['path'], hash['path'] + ".old")
 end
 ```
 
-With Dropbox::API, you can clean it up, first you put the app token and secret in a config or initializer file:
+With Cloudpt::API, you can clean it up, first you put the app token and secret in a config or initializer file:
 
 ```ruby
-Dropbox::API::Config.app_key    = APP_TOKEN
-Dropbox::API::Config.app_secret = APP_SECRET
+Cloudpt::API::Config.app_key    = APP_TOKEN
+Cloudpt::API::Config.app_secret = APP_SECRET
 ```
 
 And when you want to use it, just create a new client object with a specific access token and secret:
 
 ```ruby
 # The app token and secret are read from config, that's all you need to have a client ready for one user
-@client = Dropbox::API::Client.new(:token  => ACCESS_TOKEN, :secret => ACCESS_SECRET)
-# The file is a Dropbox::API::File object, so you can call methods on it!
+@client = Cloudpt::API::Client.new(:token  => ACCESS_TOKEN, :secret => ACCESS_SECRET)
+# The file is a Cloudpt::API::File object, so you can call methods on it!
 @client.search('test.txt').each do |file|
   file.copy(file.path + ".old2")
 end
 ```
 
-What differs this from the dropbox gem?
+What differs this from the Cloudpt gem?
 --------------------------------------
 
-Dropbox::API does not extend the Ruby primitives, like the dropbox gem:
+Cloudpt::API does not extend the Ruby primitives, like the Cloudpt gem:
 
-https://github.com/RISCfuture/dropbox/tree/master/lib/dropbox/extensions
+https://github.com/RISCfuture/Cloudpt/tree/master/lib/Cloudpt/extensions
 
-Dropbox::API::Client methods
+Cloudpt::API::Client methods
 ----------------------------
 
-### Dropbox::API::Client#account
+### Cloudpt::API::Client#account
 
 Returns a simple object with information about the account:
 
 ```ruby
-client.account # => #<Dropbox::API::Object>
+client.account # => #<Cloudpt::API::Object>
 ```
 
-For more info, see [https://www.dropbox.com/developers/reference/api#account-info](https://www.dropbox.com/developers/reference/api#account-info)
+For more info, see [https://www.Cloudpt.com/developers/reference/api#account-info](https://www.Cloudpt.com/developers/reference/api#account-info)
 
-### Dropbox::API::Client#find
+### Cloudpt::API::Client#find
 
 When provided a path, returns a single file or directory
 
 ```ruby
-client.find 'file.txt' # => #<Dropbox::API::File>
+client.find 'file.txt' # => #<Cloudpt::API::File>
 ```
 
-### Dropbox::API::Client#ls
+### Cloudpt::API::Client#ls
 
 When provided a path, returns a list of files or directories within that path
 
 By default it's the root path:
 
 ```ruby
-client.ls # => [#<Dropbox::API::File>, #<Dropbox::API::Dir>]
+client.ls # => [#<Cloudpt::API::File>, #<Cloudpt::API::Dir>]
 ```
 
 But you can provide your own path:
 
 ```ruby
-client.ls 'somedir' # => [#<Dropbox::API::File>, #<Dropbox::API::Dir>]
+client.ls 'somedir' # => [#<Cloudpt::API::File>, #<Cloudpt::API::Dir>]
 ```
 
-### Dropbox::API::Client#mkdir
+### Cloudpt::API::Client#mkdir
 
-Creates a new directory and returns a Dropbox::API::Dir object
+Creates a new directory and returns a Cloudpt::API::Dir object
 
 ```ruby
-client.mkdir 'new_dir' # => #<Dropbox::API::Dir>
+client.mkdir 'new_dir' # => #<Cloudpt::API::Dir>
 ```
 
-### Dropbox::API::Client#upload
+### Cloudpt::API::Client#upload
 
-Stores a file with a provided body under a provided name and returns a Dropbox::API::File object
+Stores a file with a provided body under a provided name and returns a Cloudpt::API::File object
 
 ```ruby
-client.upload 'file.txt', 'file body' # => #<Dropbox::API::File>
+client.upload 'file.txt', 'file body' # => #<Cloudpt::API::File>
 ```
 
-### Dropbox::API::Client#download
+### Cloudpt::API::Client#download
 
 Downloads a file with a provided name and returns it's content
 
@@ -202,30 +202,30 @@ Downloads a file with a provided name and returns it's content
 client.download 'file.txt' # => 'file body'
 ```
 
-### Dropbox::API::Client#search
+### Cloudpt::API::Client#search
 
 When provided a pattern, returns a list of files or directories within that path
 
 By default it searches the root path:
 
 ```ruby
-client.search 'pattern' # => [#<Dropbox::API::File>, #<Dropbox::API::Dir>]
+client.search 'pattern' # => [#<Cloudpt::API::File>, #<Cloudpt::API::Dir>]
 ```
 
 However, you can specify your own path:
 
 ```ruby
-client.search 'pattern', :path => 'somedir' # => [#<Dropbox::API::File>, #<Dropbox::API::Dir>]
+client.search 'pattern', :path => 'somedir' # => [#<Cloudpt::API::File>, #<Cloudpt::API::Dir>]
 ```
 
-### Dropbox::API::Client#delta
+### Cloudpt::API::Client#delta
 
 Returns a cursor and a list of files that have changed since the cursor was generated.
 
 ```ruby
 delta = client.delta 'abc123'
 delta.cursor # => 'def456'
-delta.entries # => [#<Dropbox::API::File>, #<Dropbox::API::Dir>]
+delta.entries # => [#<Cloudpt::API::File>, #<Cloudpt::API::Dir>]
 ```
 
 When called without a cursor, it returns all the files.
@@ -233,73 +233,73 @@ When called without a cursor, it returns all the files.
 ```ruby
 delta = client.delta 'abc123'
 delta.cursor # => 'abc123'
-delta.entries # => [#<Dropbox::API::File>, #<Dropbox::API::Dir>]
+delta.entries # => [#<Cloudpt::API::File>, #<Cloudpt::API::Dir>]
 ```
 
-Dropbox::API::File and Dropbox::API::Dir methods
+Cloudpt::API::File and Cloudpt::API::Dir methods
 ----------------------------
 
-These methods are shared by Dropbox::API::File and Dropbox::API::Dir
+These methods are shared by Cloudpt::API::File and Cloudpt::API::Dir
 
-### Dropbox::API::File#copy | Dropbox::API::Dir#copy
+### Cloudpt::API::File#copy | Cloudpt::API::Dir#copy
 
 Copies a file/directory to a new specified filename
 
 ```ruby
-file.copy 'newfilename.txt' # => #<Dropbox::API::File>
+file.copy 'newfilename.txt' # => #<Cloudpt::API::File>
 ```
 
-### Dropbox::API::File#move | Dropbox::API::Dir#move
+### Cloudpt::API::File#move | Cloudpt::API::Dir#move
 
 Moves a file/directory to a new specified filename
 
 ```ruby
-file.move 'newfilename.txt' # => #<Dropbox::API::File>
+file.move 'newfilename.txt' # => #<Cloudpt::API::File>
 ```
 
-### Dropbox::API::File#destroy | Dropbox::API::Dir#destroy
+### Cloudpt::API::File#destroy | Cloudpt::API::Dir#destroy
 
 Deletes a file/directory
 
 ```ruby
-file.destroy 'newfilename.txt' # => #<Dropbox::API::File>
+file.destroy 'newfilename.txt' # => #<Cloudpt::API::File>
 ```
 
 
-Dropbox::API::File methods
+Cloudpt::API::File methods
 ----------------------------
 
-### Dropbox::API::File#revisions
+### Cloudpt::API::File#revisions
 
-Returns an Array of Dropbox::API::File objects with appropriate rev attribute
+Returns an Array of Cloudpt::API::File objects with appropriate rev attribute
 
-For more info, see [https://www.dropbox.com/developers/reference/api#revisions](https://www.dropbox.com/developers/reference/api#revisions)
+For more info, see [https://www.Cloudpt.com/developers/reference/api#revisions](https://www.Cloudpt.com/developers/reference/api#revisions)
 
-### Dropbox::API::File#restore
+### Cloudpt::API::File#restore
 
 Restores a file to a specific revision
 
-For more info, see [https://www.dropbox.com/developers/reference/api#restore](https://www.dropbox.com/developers/reference/api#restore)
+For more info, see [https://www.Cloudpt.com/developers/reference/api#restore](https://www.Cloudpt.com/developers/reference/api#restore)
 
-### Dropbox::API::File#share_url
+### Cloudpt::API::File#share_url
 
-Returns the link to a file page in Dropbox
+Returns the link to a file page in Cloudpt
 
-For more info, see [https://www.dropbox.com/developers/reference/api#shares](https://www.dropbox.com/developers/reference/api#shares)
+For more info, see [https://www.Cloudpt.com/developers/reference/api#shares](https://www.Cloudpt.com/developers/reference/api#shares)
 
-### Dropbox::API::File#direct_url
+### Cloudpt::API::File#direct_url
 
-Returns the link to a file in Dropbox
+Returns the link to a file in Cloudpt
 
-For more info, see [https://www.dropbox.com/developers/reference/api#media](https://www.dropbox.com/developers/reference/api#media)
+For more info, see [https://www.Cloudpt.com/developers/reference/api#media](https://www.Cloudpt.com/developers/reference/api#media)
 
-### Dropbox::API::File#thumbnail
+### Cloudpt::API::File#thumbnail
 
 Returns the thumbnail for an image
 
-For more info, see [https://www.dropbox.com/developers/reference/api#thumbnail](https://www.dropbox.com/developers/reference/api#thumbnail)
+For more info, see [https://www.Cloudpt.com/developers/reference/api#thumbnail](https://www.Cloudpt.com/developers/reference/api#thumbnail)
 
-### Dropbox::API::File#download
+### Cloudpt::API::File#download
 
 Downloads a file and returns it's content
 
@@ -307,15 +307,15 @@ Downloads a file and returns it's content
 file.download # => 'file body'
 ```
 
-Dropbox::API::Dir methods
+Cloudpt::API::Dir methods
 ----------------------------
 
-### Dropbox::API::Dir#ls
+### Cloudpt::API::Dir#ls
 
 Returns a list of files or directorys within that directory
 
 ```ruby
-dir.ls # => [#<Dropbox::API::File>, #<Dropbox::API::Dir>]
+dir.ls # => [#<Cloudpt::API::File>, #<Cloudpt::API::Dir>]
 ```
 
 Testing

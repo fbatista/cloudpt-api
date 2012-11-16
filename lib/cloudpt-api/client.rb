@@ -1,7 +1,7 @@
-require "dropbox-api/client/raw"
-require "dropbox-api/client/files"
+require "cloudpt-api/client/raw"
+require "cloudpt-api/client/files"
 
-module Dropbox
+module Cloudpt
   module API
 
     class Client
@@ -9,39 +9,39 @@ module Dropbox
       attr_accessor :raw, :connection
 
       def initialize(options = {})
-        @connection = Dropbox::API::Connection.new(:token  => options.delete(:token),
+        @connection = Cloudpt::API::Connection.new(:token  => options.delete(:token),
                                                    :secret => options.delete(:secret))
-        @raw        = Dropbox::API::Raw.new :connection => @connection
+        @raw        = Cloudpt::API::Raw.new :connection => @connection
         @options    = options
       end
 
-      include Dropbox::API::Client::Files
+      include Cloudpt::API::Client::Files
 
       def find(filename)
         data = self.raw.metadata(:path => filename)
         data.delete('contents')
-        Dropbox::API::Object.convert(data, self)
+        Cloudpt::API::Object.convert(data, self)
       end
 
       def ls(path = '')
-        Dropbox::API::Dir.init({'path' => path}, self).ls
+        Cloudpt::API::Dir.init({'path' => path}, self).ls
       end
 
       def account
-        Dropbox::API::Object.init(self.raw.account, self)
+        Cloudpt::API::Object.init(self.raw.account, self)
       end
 
       def mkdir(path)
-        # Remove the characters not allowed by Dropbox
+        # Remove the characters not allowed by Cloudpt
         path = path.gsub(/[\\\:\?\*\<\>\"\|]+/, '')
         response = raw.create_folder :path => path
-        Dropbox::API::Dir.init(response, self)
+        Cloudpt::API::Dir.init(response, self)
       end
 
       def search(term, options = {})
         options[:path] ||= ''
         results = raw.search({ :query => term }.merge(options))
-        Dropbox::API::Object.convert(results, self)
+        Cloudpt::API::Object.convert(results, self)
       end
 
       def delta(cursor=nil)
@@ -59,7 +59,7 @@ module Dropbox
           entry.last || {:is_deleted => true, :path => entry.first}
         end
 
-        Delta.new(params[:cursor], Dropbox::API::Object.convert(files, self))
+        Delta.new(params[:cursor], Cloudpt::API::Object.convert(files, self))
       end
 
     end

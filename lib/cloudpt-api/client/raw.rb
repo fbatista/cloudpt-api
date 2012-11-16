@@ -1,4 +1,4 @@
-module Dropbox
+module Cloudpt
   module API
 
     class Raw
@@ -11,7 +11,7 @@ module Dropbox
 
       def self.add_method(method, action, options = {})
         # Add the default root bit, but allow it to be disabled by a config option
-        root = options[:root] == false ? '' : "options[:root] ||= Dropbox::API::Config.mode"
+        root = options[:root] == false ? '' : "options[:root] ||= Cloudpt::API::Config.mode"
         self.class_eval <<-STR
           def #{options[:as] || action}(options = {})
             #{root}
@@ -22,8 +22,8 @@ module Dropbox
 
       def request(endpoint, method, action, data = {})
         action.sub! ':root', data.delete(:root) if action.match ':root'
-        action.sub! ':path', Dropbox::API::Util.escape(data.delete(:path)) if action.match ':path'
-        action = Dropbox::API::Util.remove_double_slashes(action)
+        action.sub! ':path', Cloudpt::API::Util.escape(data.delete(:path)) if action.match ':path'
+        action = Cloudpt::API::Util.remove_double_slashes(action)
         connection.send(method, endpoint, action, data)
       end
 

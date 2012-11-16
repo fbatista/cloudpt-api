@@ -1,4 +1,4 @@
-module Dropbox
+module Cloudpt
   module API
     class Delta
       attr_reader :cursor, :entries

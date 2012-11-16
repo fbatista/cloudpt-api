@@ -1,10 +1,10 @@
 require "spec_helper"
 
-describe Dropbox::API::File do
+describe Cloudpt::API::File do
 
   before do
-    @client = Dropbox::Spec.instance
-    @filename = "#{Dropbox::Spec.test_dir}/spec-test-#{Time.now.to_i}.txt"
+    @client = Cloudpt::Spec.instance
+    @filename = "#{Cloudpt::Spec.test_dir}/spec-test-#{Time.now.to_i}.txt"
     @file = @client.upload @filename, "spec file"
   end
 
@@ -48,7 +48,7 @@ describe Dropbox::API::File do
 
       revisions = @file.revisions
       revisions.size.should == 2
-      revisions.collect { |f| f.class }.should == [Dropbox::API::File, Dropbox::API::File]
+      revisions.collect { |f| f.class }.should == [Cloudpt::API::File, Cloudpt::API::File]
     end
 
   end
@@ -84,7 +84,7 @@ describe Dropbox::API::File do
     it "returns an Url object" do
 
       result = @file.share_url
-      result.should be_an_instance_of(Dropbox::API::Object)
+      result.should be_an_instance_of(Cloudpt::API::Object)
       result.keys.sort.should == ['expires', 'url']
 
     end
@@ -96,7 +96,7 @@ describe Dropbox::API::File do
     it "returns a copy_ref object" do
       
       result = @file.copy_ref
-      result.should be_an_instance_of(Dropbox::API::Object)
+      result.should be_an_instance_of(Cloudpt::API::Object)
       result.keys.sort.should == ['copy_ref', 'expires']
       
     end
@@ -108,7 +108,7 @@ describe Dropbox::API::File do
     it "returns an Url object" do
 
       result = @file.direct_url
-      result.should be_an_instance_of(Dropbox::API::Object)
+      result.should be_an_instance_of(Cloudpt::API::Object)
       result.keys.sort.should == ['expires', 'url']
 
     end

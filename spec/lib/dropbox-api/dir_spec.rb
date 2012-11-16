@@ -1,10 +1,10 @@
 require "spec_helper"
 
-describe Dropbox::API::Dir do
+describe Cloudpt::API::Dir do
 
   before do
-    @client = Dropbox::Spec.instance
-    @dirname = "#{Dropbox::Spec.test_dir}/spec-dir-test-#{Time.now.to_i}"
+    @client = Cloudpt::Spec.instance
+    @dirname = "#{Cloudpt::Spec.test_dir}/spec-dir-test-#{Time.now.to_i}"
     @dir = @client.mkdir @dirname
   end
 

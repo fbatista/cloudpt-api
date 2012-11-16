@@ -5,3 +5,4 @@ pkg/*
 spec/connection.yml
 bin
 coverage
+.DS_Store

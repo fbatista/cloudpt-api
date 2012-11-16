@@ -1,4 +1,4 @@
 require 'bundler/gem_tasks'
 
-require "dropbox-api/tasks"
-Dropbox::API::Tasks.install
+require "cloudpt-api/tasks"
+Cloudpt::API::Tasks.install

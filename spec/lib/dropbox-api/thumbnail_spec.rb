@@ -1,13 +1,13 @@
 require "spec_helper"
 require "fileutils"
 
-describe Dropbox::API::File do
+describe Cloudpt::API::File do
 
   before do
     @io       = StringIO.new
-    @client   = Dropbox::Spec.instance
-    @filename = "#{Dropbox::Spec.test_dir}/spec-test-#{Time.now.to_i}.jpg"
-    jpeg      = File.read("spec/fixtures/dropbox.jpg")
+    @client   = Cloudpt::Spec.instance
+    @filename = "#{Cloudpt::Spec.test_dir}/spec-test-#{Time.now.to_i}.jpg"
+    jpeg      = File.read("spec/fixtures/cloudpt.jpg")
     @file     = @client.upload @filename, jpeg
   end
 

@@ -16,7 +16,7 @@ module Dropbox
         :content   => "https://api-content.cloudpt.pt",
         :authorize => "https://cloudpt.pt"
       }
-      self.prefix     = "/1"
+      self.prefix     = ""
       self.app_key    = nil
       self.app_secret = nil
       self.mode       = 'sandbox'

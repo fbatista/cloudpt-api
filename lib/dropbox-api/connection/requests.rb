@@ -50,7 +50,7 @@ module Dropbox
             puts "#{Dropbox::API::Config.prefix}#{path}"
             puts data
             puts headers
-            puts token(endpoint)
+            puts token(endpoint).inspect
             token(endpoint).post "#{Dropbox::API::Config.prefix}#{path}", data, headers
           end
         end

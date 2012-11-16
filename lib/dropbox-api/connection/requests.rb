@@ -47,6 +47,7 @@ module Dropbox
 
         def post(endpoint, path, data = {}, headers = {})
           request do
+            puts "#{Dropbox::API::Config.prefix}#{path}"
             token(endpoint).post "#{Dropbox::API::Config.prefix}#{path}", data, headers
           end
         end

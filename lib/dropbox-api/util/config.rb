@@ -12,9 +12,9 @@ module Dropbox
       end
 
       self.endpoints = {
-        :main      => "https://api.dropbox.com",
-        :content   => "https://api-content.dropbox.com",
-        :authorize => "https://www.dropbox.com"
+        :main      => "https://api.cloudpt.pt",
+        :content   => "https://api-content.cloudpt.pt",
+        :authorize => "https://cloudpt.pt"
       }
       self.prefix     = "/1"
       self.app_key    = nil

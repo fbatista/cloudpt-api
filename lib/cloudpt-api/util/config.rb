@@ -19,7 +19,7 @@ module Cloudpt
       self.prefix     = ""
       self.app_key    = nil
       self.app_secret = nil
-      self.mode       = 'sandbox'
+      self.mode       = nil
 
     end
 

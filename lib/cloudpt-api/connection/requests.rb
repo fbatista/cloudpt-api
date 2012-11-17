@@ -47,11 +47,6 @@ module Cloudpt
 
         def post(endpoint, path, data = {}, headers = {})
           request do
-            puts "#{Cloudpt::API::Config.prefix}#{path}"
-            puts data
-            puts headers
-            puts endpoint
-            puts token(endpoint).inspect
             token(endpoint).post "#{Cloudpt::API::Config.prefix}#{path}", data, headers
           end
         end

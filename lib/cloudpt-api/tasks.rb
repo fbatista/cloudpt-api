@@ -24,11 +24,11 @@ module Cloudpt
             request_token = consumer.get_request_token
             puts "\nGo to this url and click 'Authorize' to get the token:"
             puts request_token.authorize_url
-            query  = request_token.authorize_url.split('?').last
-            params = CGI.parse(query)
-            token  = params['oauth_token'].first
-            print "\nOnce you authorize the app on Cloudpt, press enter... "
-            $stdin.gets.chomp
+            #query  = request_token.authorize_url.split('?').last
+            #params = CGI.parse(query)
+            #token  = params['oauth_token'].first
+            print "\nOnce you authorize the app on Cloudpt enter the pin and press enter... "
+            token = $stdin.gets.chomp
 
             access_token  = request_token.get_access_token(:oauth_verifier => token)
 

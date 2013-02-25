@@ -11,28 +11,19 @@ Current state:
 
 First release, whole API covered.
 
-Important!!!
-------------
-
-From version 0.2.0, Cloudpt::API::File#delete and Cloudpt::API::Dir#delete *are gone*!!
-
-The reason is that it's based on Hashie::Mash and was screwing Hash#delete.
-
-It is replaced with Cloudpt::API::File#destroy and Cloudpt::API::Dir#destroy.
-
 Installation
 ------------
 
 Cloudpt::API is available on RubyGems, so:
 
 ```
-gem install Cloudpt-api
+gem install cloudpt-api
 ```
 
 Or in your Gemfile:
 
 ```ruby
-gem "Cloudpt-api"
+gem "cloudpt-api"
 ```
 
 Configuration
@@ -81,7 +72,7 @@ Cloudpt::API supplies you with a helper rake which will authorize a single clien
 In order to have this rake available, put this on your Rakefile:
 
 ```ruby
-require "Cloudpt-api/tasks"
+require "cloudpt-api/tasks"
 Cloudpt::API::Tasks.install
 ```
 

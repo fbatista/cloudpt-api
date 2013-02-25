@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version     = Cloudpt::API::VERSION
   s.authors     = ["Fabio Batista"]
   s.email       = ["fbatista@webreakstuff.com"]
-  s.homepage    = "http://github.com/futuresimple/cloudpt-api"
+  s.homepage    = "http://github.com/fbatista/cloudpt-api"
   s.summary     = "A Ruby client for the cloudpt REST API."
   s.description = "To deliver a more Rubyesque experience when using the cloudpt API."
 

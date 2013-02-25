@@ -12,14 +12,14 @@ module Cloudpt
       end
 
       self.endpoints = {
-        :main      => "https://api.cloudpt.pt",
+        :main      => "https://publicapi.cloudpt.pt",
         :content   => "https://api-content.cloudpt.pt",
         :authorize => "https://cloudpt.pt"
       }
-      self.prefix     = ""
+      self.prefix     = "/1"
       self.app_key    = nil
       self.app_secret = nil
-      self.mode       = nil
+      self.mode       = 'sandbox'
 
     end
 

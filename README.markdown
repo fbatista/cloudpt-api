@@ -1,5 +1,5 @@
 Cloudpt::API - Cloudpt Ruby API client
-=========
+======================================
 
 A Ruby client for the Cloudpt REST API.
 
@@ -11,8 +11,8 @@ Current state:
 
 First release, whole API covered.
 
-Installation
-------------
+Step 1: Installation
+--------------------
 
 Cloudpt::API is available on RubyGems, so:
 
@@ -26,8 +26,8 @@ Or in your Gemfile:
 gem "cloudpt-api"
 ```
 
-Configuration
--------------
+Step 2: Configuration
+---------------------
 
 In order to use this client, you need to have an app created on https://www.Cloudpt.com/developers/apps.
 
@@ -39,8 +39,8 @@ Cloudpt::API::Config.app_secret = YOUR_APP_SECRET
 Cloudpt::API::Config.mode       = "sandbox" # if you have a single-directory app or "Cloudpt" if it has access to the whole Cloudpt
 ```
 
-Cloudpt::API::Client
---------------------
+Step 3a: Authorization
+----------------------
 
 The client is the base for all communication with the API and wraps around almost all calls
 available in the API.
@@ -52,20 +52,25 @@ on how to do this:
 ```ruby
 consumer = Cloudpt::API::OAuth.consumer(:authorize)
 request_token = consumer.get_request_token
-request_token.authorize_url(:oauth_callback => 'http://yoursite.com/callback')
-# Here the user goes to Cloudpt, authorizes the app and is redirected
-# The oauth_token will be available in the params
-request_token.get_access_token(:oauth_verifier => oauth_token)
+# if you have a callback url
+authorize_url = request_token.authorize_url(:oauth_callback => 'http://yoursite.com/callback')
+# if you're running an "out of band app"
+authorize_url = request_token.authorize_url
+# Here the user goes to Cloudpt (following the authorize_url), authorizes the app and is redirected to oauth_callback, or is shown a pin (oauth_verifier).
+# on the redirect case, the oauth_token (to be used as oauth_verifier on the next line) will be available in the params.
+access_token = request_token.get_access_token(:oauth_verifier => oauth_token)
 ```
 
-Now that you have the oauth token and secret, you can create a new instance of the Cloudpt::API::Client, like this:
+Now that you have the oauth token (access_token.token) and secret (access_token.secret), you can create a new instance of the Cloudpt::API::Client, like this:
 
 ```ruby
-client = Cloudpt::API::Client.new :token => token, :secret => secret
+client = Cloudpt::API::Client.new :token => access_token.token, :secret => access_token.secret
 ```
 
-Rake-based authorization
-------------------------
+Note: this token and secret are the ones you'll want to use if you're trying to run the Rspec tests (step 4).
+
+Step 3b: Rake-based authorization
+---------------------------------
 
 Cloudpt::API supplies you with a helper rake which will authorize a single client. This is useful for development and testing.
 
@@ -84,30 +89,26 @@ Simply go to that url, authorize the app, then press enter in the console.
 
 The rake task will output valid ruby code which you can use to create a client.
 
-What differs this from the Cloudpt Ruby SDK?
---------------------------------------------
+Step 4 (optional): Testing
+--------------------------
 
-A few things:
+This assumes you've cloned cloudpt-api repository and you're trying to run the Rspec tests.
 
-* It's using the ruby oauth gem, instead of reinventing the wheel and implementing OAuth communication
-* It treats files and directories as Ruby objects with appropriate classes, on which you can perform operations
+In order to run tests, you need to have an application created and authorized (check step 2 and 3). Put all tokens in spec/connection.yml and you're good to go.
 
-Consider the following example which takes all files with names like 'test.txt' and copies them with a suffix '.old'
+Check out spec/connection.sample.yml for an example.
 
-This is how it would look using the SDK:
+Just run rspec from the project root.
 
-```ruby
-# Because you need the session with the right access token, you need to create one instance per user
-@session = CloudptSession.new(APP_TOKEN, APP_SECRET)
-@session.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
-@client = CloudptClient.new(@session, :app_folder)
-# The result is a hash, so we need to call a method on the client, supplying the right key from the hash
-@client.search('/', 'test.txt').each do |hash|
-  @client.file_copy(hash['path'], hash['path'] + ".old")
-end
+```
+$ rspec
 ```
 
-With Cloudpt::API, you can clean it up, first you put the app token and secret in a config or initializer file:
+
+Step 5: Usage
+-------------
+
+First you put the app token and secret in a config or initializer file:
 
 ```ruby
 Cloudpt::API::Config.app_key    = APP_TOKEN
@@ -125,13 +126,6 @@ And when you want to use it, just create a new client object with a specific acc
 end
 ```
 
-What differs this from the Cloudpt gem?
---------------------------------------
-
-Cloudpt::API does not extend the Ruby primitives, like the Cloudpt gem:
-
-https://github.com/RISCfuture/Cloudpt/tree/master/lib/Cloudpt/extensions
-
 Cloudpt::API::Client methods
 ----------------------------
 
@@ -143,7 +137,7 @@ Returns a simple object with information about the account:
 client.account # => #<Cloudpt::API::Object>
 ```
 
-For more info, see [https://www.Cloudpt.com/developers/reference/api#account-info](https://www.Cloudpt.com/developers/reference/api#account-info)
+For more info, see [https://cloudpt.pt/documentation#accountinfo](https://cloudpt.pt/documentation#accountinfo)
 
 ### Cloudpt::API::Client#find
 
@@ -309,14 +303,7 @@ Returns a list of files or directorys within that directory
 dir.ls # => [#<Cloudpt::API::File>, #<Cloudpt::API::Dir>]
 ```
 
-Testing
----------
-
-In order to run tests, you need to have an application created and authorized. Put all tokens in spec/connection.yml and you're good to go.
-
-Check out spec/connection.sample.yml for an example.
-
 Copyright
 ---------
-
 Copyright (c) 2011 Marcin Bunsch, Future Simple Inc. See LICENSE for details.
+Copyright (c) 2013 Fábio Batista, Webreakstuff.

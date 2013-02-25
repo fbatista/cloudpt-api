@@ -11,9 +11,9 @@ module Cloudpt
           end
           ::OAuth::Consumer.new(Cloudpt::API::Config.app_key, Cloudpt::API::Config.app_secret,
             :site => Cloudpt::API::Config.endpoints[endpoint],
-            :request_token_path => Cloudpt::API::Config.prefix + "/oauth/request_token",
-            :authorize_path     => Cloudpt::API::Config.prefix + "/oauth/authorize",
-            :access_token_path  => Cloudpt::API::Config.prefix + "/oauth/access_token")
+            :request_token_path => "/oauth/request_token",
+            :authorize_path     => "/oauth/authorize",
+            :access_token_path  => "/oauth/access_token")
         end
 
         def access_token(consumer, options = {})

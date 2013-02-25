@@ -44,6 +44,7 @@ module Cloudpt
       add_method :post, "/Storage/CloudPT/CreateFolder",  :as => "create_folder"
       add_method :post, "/Storage/CloudPT/Delete",         :as => "delete"
       add_method :post, "/Storage/CloudPT/Move",           :as => "move"
+      add_method :post, "/Storage/CloudPT/List/:root/:path",           :as => "list"
 
     end
 

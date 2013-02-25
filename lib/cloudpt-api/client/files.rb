@@ -8,7 +8,7 @@ module Cloudpt
         def download(path, options = {})
           root     = options.delete(:root) || Cloudpt::API::Config.mode
           path     = Cloudpt::API::Util.escape(path)
-          url      = ['', "Storage/CloudPT/Files", root, path].compact.join('/')
+          url      = ["/Storage/CloudPT/Files", root, path].compact.join('/')
           connection.get_raw(:content, url)
         end
 
@@ -16,7 +16,7 @@ module Cloudpt
           root     = options.delete(:root) || Cloudpt::API::Config.mode
           query    = Cloudpt::API::Util.query(options)
           path     = Cloudpt::API::Util.escape(path)
-          url      = ['', "Storage/CloudPT/Files", root, path].compact.join('/')
+          url      = ["/Storage/CloudPT/Files", root, path].compact.join('/')
           response = connection.put(:content, "#{url}?#{query}", data, {
             'Content-Type'   => "application/octet-stream",
             "Content-Length" => data.length.to_s

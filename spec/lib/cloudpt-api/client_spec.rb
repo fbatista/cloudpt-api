@@ -49,6 +49,13 @@ describe Cloudpt::API::Client do
 
   end
 
+  describe "#list" do
+    it "lists root" do
+      result = @client.list("")
+      result.should be_an_instance_of(Array)
+    end
+  end
+
   describe "#ls" do
 
     it "returns an array of files and dirs" do

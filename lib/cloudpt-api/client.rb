@@ -23,6 +23,10 @@ module Cloudpt
         Cloudpt::API::Object.convert(data, self)
       end
 
+      def list(path = '')
+        response = raw.list :path => path
+      end
+
       def ls(path = '')
         Cloudpt::API::Dir.init({'path' => path}, self).ls
       end

@@ -74,6 +74,13 @@ describe Cloudpt::API::Client do
 
   describe "#mkdir" do
 
+    it "creates simple dir" do
+      dirname  = "#{Cloudpt::Spec.test_dir}"
+      response = @client.mkdir dirname
+      response.path.should == dirname
+      response.should be_an_instance_of(Cloudpt::API::Dir)
+    end
+
     it "returns an array of files and dirs" do
       dirname  = "#{Cloudpt::Spec.test_dir}/test-dir-#{Cloudpt::Spec.namespace}"
       response = @client.mkdir dirname

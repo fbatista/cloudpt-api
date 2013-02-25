@@ -37,8 +37,8 @@ module Cloudpt
 
       def mkdir(path)
         # Remove the characters not allowed by Cloudpt
-        path = path.gsub(/[\\\:\?\*\<\>\"\|]+/, '')
-        response = raw.create_folder :path => path
+        path = path.gsub(/(^\/)|([\\\:\?\*\<\>\"\|]+)/, '')
+        response = raw.create_folder :path => "/#{path}"
         Cloudpt::API::Dir.init(response, self)
       end
 

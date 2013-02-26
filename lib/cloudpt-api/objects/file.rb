@@ -33,6 +33,16 @@ module Cloudpt
         response = client.raw.copy_ref({ :path => self.path }.merge(options))
         Cloudpt::API::Object.init(response, client)
       end
+
+
+      #alias_method :old_path, :path
+      #def path
+      #  if Cloudpt::API::Config.mode == 'sandbox'
+      #    Cloudpt::API::Util.strip_slash(self['path'].sub(/^\/([^\/]+)?/, ''))
+      #  else
+      #    old_path
+      #  end
+      #end
       
       def download
         client.download(self.path)

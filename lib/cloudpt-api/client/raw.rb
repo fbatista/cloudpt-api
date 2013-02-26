@@ -40,11 +40,11 @@ module Cloudpt
       add_method :get_raw, "/Thumbnails/:root/:path", :as => 'thumbnails', :endpoint => :content
 
       add_method :post, "/Fileops/Copy",           :as => "copy"
-      add_method :get,  "/CopyRef/:root/:path",   :as => 'copy_ref'
-      add_method :post, "/Fileops/CreateFolder",  :as => "create_folder"
+      add_method :get,  "/CopyRef/:root/:path",    :as => 'copy_ref'
+      add_method :post, "/Fileops/CreateFolder",   :as => "create_folder"
       add_method :post, "/Fileops/Delete",         :as => "delete"
       add_method :post, "/Fileops/Move",           :as => "move"
-      add_method :post, "/List/:root/:path",           :as => "list"
+      add_method :get, "/List/:root/:path",       :as => "list"
 
     end
 

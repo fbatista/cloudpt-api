@@ -9,6 +9,8 @@ module Cloudpt
           response = yield
           raise Cloudpt::API::Error::ConnectionFailed if !response
           status = response.code.to_i
+          #puts "STATUS:#{status}"
+          #puts "PAYLOAD:\n#{response.body}"
           case status
             when 401
               raise Cloudpt::API::Error::Unauthorized
@@ -33,6 +35,7 @@ module Cloudpt
 
         def get_raw(endpoint, path, data = {}, headers = {})
           query = Cloudpt::API::Util.query(data)
+          #puts "GET #{Cloudpt::API::Config.prefix}#{path}?#{URI.parse(URI.encode(query))}"
           request(:raw => true) do
             token(endpoint).get "#{Cloudpt::API::Config.prefix}#{path}?#{URI.parse(URI.encode(query))}", headers
           end
@@ -40,18 +43,24 @@ module Cloudpt
 
         def get(endpoint, path, data = {}, headers = {})
           query = Cloudpt::API::Util.query(data)
+          query = "?#{URI.parse(URI.encode(query))}" unless query.empty?
+          #puts "GET #{Cloudpt::API::Config.prefix}#{path}#{query}"
           request do
-            token(endpoint).get "#{Cloudpt::API::Config.prefix}#{path}?#{URI.parse(URI.encode(query))}", headers
+            token(endpoint).get "#{Cloudpt::API::Config.prefix}#{path}#{query}", headers
           end
         end
 
         def post(endpoint, path, data = {}, headers = {})
+          #puts "POST #{Cloudpt::API::Config.prefix}#{path}"
+          #puts "BODY:\n#{data}"
           request do
             token(endpoint).post "#{Cloudpt::API::Config.prefix}#{path}", data, headers
           end
         end
 
         def put(endpoint, path, data = {}, headers = {})
+          #puts "PUT #{Cloudpt::API::Config.prefix}#{path}"
+          #puts "BODY:\n#{data}"
           request do
             token(endpoint).put "#{Cloudpt::API::Config.prefix}#{path}", data, headers
           end

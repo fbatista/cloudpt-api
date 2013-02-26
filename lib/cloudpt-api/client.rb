@@ -25,6 +25,9 @@ module Cloudpt
 
       def list(path = '')
         response = raw.list :path => path
+        results = Cloudpt::API::Object.convert(response, self)
+        results['contents'] = Cloudpt::API::Object.convert(results.delete('contents') || [], self)
+        results
       end
 
       def ls(path = '')
@@ -45,6 +48,12 @@ module Cloudpt
       def search(term, options = {})
         options[:path] ||= ''
         results = raw.search({ :query => term }.merge(options))
+        #search results have broken paths, fix them here for now
+        results.each do |result|
+          if Cloudpt::API::Config.mode == 'sandbox'
+            result['path'] = result['path'].sub(/^\/([^\/]+)?/, '')
+          end
+        end
         Cloudpt::API::Object.convert(results, self)
       end
 

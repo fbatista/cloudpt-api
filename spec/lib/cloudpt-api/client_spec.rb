@@ -3,9 +3,15 @@ require "spec_helper"
 
 describe Cloudpt::API::Client do
 
-  before do
+  before(:all) do
     # pending
     @client = Cloudpt::Spec.instance
+    @dirname = "#{Cloudpt::Spec.test_dir}"
+    @dir = @client.mkdir @dirname
+  end
+
+  after(:all) do
+    @dir.destroy
   end
 
   describe "#initialize" do
@@ -27,11 +33,11 @@ describe Cloudpt::API::Client do
 
   describe "#find" do
 
-    before do
-      @filename = "#{Cloudpt::Spec.test_dir}/spec-find-file-test-#{Time.now.to_i}.txt"
+    before(:all) do
+      @filename = "#{Cloudpt::Spec.test_dir}/spec--find-file-test-#{Time.now.to_i}.txt"
       @file = @client.upload @filename, "spec file"
 
-      @dirname = "#{Cloudpt::Spec.test_dir}/spec-find-dir-test-#{Time.now.to_i}"
+      @dirname = "#{Cloudpt::Spec.test_dir}/spec--find-dir-test-#{Time.now.to_i}"
       @dir = @client.mkdir @dirname
     end
 
@@ -50,9 +56,17 @@ describe Cloudpt::API::Client do
   end
 
   describe "#list" do
+    before do
+      @filename = "#{Cloudpt::Spec.test_dir}/spec-find-file-test-#{Time.now.to_i}.txt"
+      @file = @client.upload @filename, "spec file"
+
+      @dirname = "#{Cloudpt::Spec.test_dir}/spec-find-dir-test-#{Time.now.to_i}"
+      @dir = @client.mkdir @dirname
+    end
+
     it "lists root" do
-      result = @client.list("")
-      result.should be_an_instance_of(Array)
+      result = @client.list("#{Cloudpt::Spec.test_dir}")
+      result['contents'].should be_an_instance_of(Array)
     end
   end
 
@@ -73,13 +87,6 @@ describe Cloudpt::API::Client do
   end
 
   describe "#mkdir" do
-
-    it "creates simple dir" do
-      dirname  = "#{Cloudpt::Spec.test_dir}"
-      response = @client.mkdir dirname
-      response.path.should == dirname
-      response.should be_an_instance_of(Cloudpt::API::Dir)
-    end
 
     it "returns an array of files and dirs" do
       dirname  = "#{Cloudpt::Spec.test_dir}/test-dir-#{Cloudpt::Spec.namespace}"
@@ -113,13 +120,15 @@ describe Cloudpt::API::Client do
       response.bytes.should == 9
     end
 
+    #FAIL ON SERVER |*<>?:
     it "uploads the file with tricky characters" do
-      filename = "#{Cloudpt::Spec.test_dir}/test ,|!@\#$%^&*{b}[].;'.,<>?:-#{Cloudpt::Spec.namespace}.txt"
+      filename = "#{Cloudpt::Spec.test_dir}/test ,!@\#$%^&{b}[].;'.,-#{Cloudpt::Spec.namespace}.txt"
       response = @client.upload filename, "Some file"
       response.path.should == filename
       response.bytes.should == 9
     end
 
+    #FAIL ON SERVER
     it "uploads the file with utf8" do
       filename = "#{Cloudpt::Spec.test_dir}/test łołąó-#{Cloudpt::Spec.namespace}.txt"
       response = @client.upload filename, "Some file"
@@ -132,22 +141,22 @@ describe Cloudpt::API::Client do
 
     let(:term) { "searchable-test-#{Cloudpt::Spec.namespace}" }
 
-    before do
+    before(:all) do
       filename = "#{Cloudpt::Spec.test_dir}/searchable-test-#{Cloudpt::Spec.namespace}.txt"
       @client.upload filename, "Some file"
-    end
-
-    after do
-      @response.size.should == 1
-      @response.first.class.should == Cloudpt::API::File
+      sleep(2)
     end
 
     it "finds a file" do
-      @response = @client.search term, :path => "#{Cloudpt::Spec.test_dir}"
+      response = @client.search term, :path => "#{Cloudpt::Spec.test_dir}"
+      response.size.should_not == 0
+      response.first.class.should == Cloudpt::API::File
     end
 
     it "works if leading slash is present in path" do
-      @response = @client.search term, :path => "/#{Cloudpt::Spec.test_dir}"
+      response = @client.search term, :path => "/#{Cloudpt::Spec.test_dir}"
+      response.size.should_not == 0
+      response.first.class.should == Cloudpt::API::File
     end
 
   end
@@ -155,12 +164,17 @@ describe Cloudpt::API::Client do
   describe "#copy_from_copy_ref" do
 
     it "copies a file from a copy_ref" do
-      filename = "test/searchable-test-#{Cloudpt::Spec.namespace}.txt"
+      filename = "#{Cloudpt::Spec.test_dir}/searchable-test-copy-#{Cloudpt::Spec.namespace}.txt"
       @client.upload filename, "Some file"
-      response = @client.search "searchable-test-#{Cloudpt::Spec.namespace}", :path => 'test'      
-      ref = response.first.copy_ref['copy_ref']
-      @client.copy_from_copy_ref ref, "#{filename}.copied"
-      response = @client.search "searchable-test-#{Cloudpt::Spec.namespace}.txt.copied", :path => 'test'   
+      sleep(2)
+      response = @client.search "searchable-test-copy-#{Cloudpt::Spec.namespace}", :path => "#{Cloudpt::Spec.test_dir}"
+      ref = response.first.copy_ref
+      ref.should_not == nil
+      the_copy_ref = ref['copy-ref']
+      the_copy_ref.should_not == nil
+      @client.copy_from_copy_ref the_copy_ref, "#{filename}.copied"
+      sleep(2)
+      response = @client.search "searchable-test-copy-#{Cloudpt::Spec.namespace}.txt.copied", :path => "#{Cloudpt::Spec.test_dir}"
       response.size.should == 1
       response.first.class.should == Cloudpt::API::File
     end

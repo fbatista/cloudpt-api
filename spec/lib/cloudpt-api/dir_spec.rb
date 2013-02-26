@@ -4,12 +4,9 @@ describe Cloudpt::API::Dir do
 
   before do
     @client = Cloudpt::Spec.instance
+    @parent_dir = @client.mkdir "#{Cloudpt::Spec.test_dir}"
     @dirname = "#{Cloudpt::Spec.test_dir}/spec-dir-test-#{Time.now.to_i}"
     @dir = @client.mkdir @dirname
-  end
-
-  after do
-    # @dir.delete
   end
 
   describe "#copy" do
@@ -20,6 +17,11 @@ describe Cloudpt::API::Dir do
       @dir.path.should == new_dirname
     end
 
+    after do
+      @dir.destroy
+      @parent_dir.destroy
+    end
+
   end
 
   describe "#move" do
@@ -28,6 +30,11 @@ describe Cloudpt::API::Dir do
       new_dirname = @dirname + "-copied"
       @dir.move new_dirname
       @dir.path.should == new_dirname
+    end
+
+    after do
+      @dir.destroy
+      @parent_dir.destroy
     end
 
   end

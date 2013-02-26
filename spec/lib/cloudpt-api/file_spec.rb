@@ -4,12 +4,14 @@ describe Cloudpt::API::File do
 
   before do
     @client = Cloudpt::Spec.instance
+    @dirname = "#{Cloudpt::Spec.test_dir}"
+    @dir = @client.mkdir @dirname
     @filename = "#{Cloudpt::Spec.test_dir}/spec-test-#{Time.now.to_i}.txt"
     @file = @client.upload @filename, "spec file"
   end
 
   after do
-    # @file.delete
+    @dir.destroy
   end
 
   describe "#copy" do
@@ -44,8 +46,9 @@ describe Cloudpt::API::File do
   describe "#revisions" do
 
     it "retrieves all revisions as an Array of File objects" do
-      @client.upload @file.path, "Updated content"
-
+      sleep(2)
+      @client.upload @file.path, "Updated content", {'overwrite' => true, :method => :post}
+      #FAIL AT SERVER ?
       revisions = @file.revisions
       revisions.size.should == 2
       revisions.collect { |f| f.class }.should == [Cloudpt::API::File, Cloudpt::API::File]

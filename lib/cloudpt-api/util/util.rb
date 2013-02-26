@@ -15,6 +15,10 @@ module Cloudpt
           data.inject([]) { |memo, entry| memo.push(entry.join('=')); memo }.join('&')
         end
 
+        def strip_slash(path)
+          path.sub(/^\//, '')
+        end
+
         def remove_double_slashes(path)
           path.gsub('//', '/')
         end

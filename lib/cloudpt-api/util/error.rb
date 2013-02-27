@@ -9,7 +9,7 @@ module Cloudpt
       class Forbidden < Exception; end
       class NotFound < Exception; end
       class Redirect < Exception; end
-      class Fivehundredstrong < Exception; end
+      class ServerError < Exception; end
     end
 
   end

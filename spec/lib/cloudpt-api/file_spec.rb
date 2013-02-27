@@ -88,8 +88,9 @@ describe Cloudpt::API::File do
 
       result = @file.share_url
       result.should be_an_instance_of(Cloudpt::API::Object)
-      result.keys.sort.should == ['expires', 'url']
-
+      result.should have_key 'expires'
+      result.should have_key 'url'
+      result.should have_key 'link_shareid'
     end
 
   end
@@ -97,11 +98,11 @@ describe Cloudpt::API::File do
   describe "#copy_ref" do
     
     it "returns a copy_ref object" do
-      
+      sleep(2)
       result = @file.copy_ref
       result.should be_an_instance_of(Cloudpt::API::Object)
-      result.keys.sort.should == ['copy_ref', 'expires']
-      
+      result.should have_key 'copy_ref'
+      result.should have_key 'expires'
     end
     
   end
@@ -109,11 +110,11 @@ describe Cloudpt::API::File do
   describe "#direct_url" do
 
     it "returns an Url object" do
-
+      sleep(2)
       result = @file.direct_url
       result.should be_an_instance_of(Cloudpt::API::Object)
-      result.keys.sort.should == ['expires', 'url']
-
+      result.should have_key 'url'
+      result.should have_key 'expires'
     end
 
   end

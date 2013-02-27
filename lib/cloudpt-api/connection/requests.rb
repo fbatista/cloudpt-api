@@ -25,7 +25,7 @@ module Cloudpt
             when 300..399
               raise Cloudpt::API::Error::Redirect
             when 500..599
-              raise Cloudpt::API::Error::Fivehundredstrong
+              raise Cloudpt::API::Error::ServerError
             else
               options[:raw] ? response.body : MultiJson.decode(response.body)
           end

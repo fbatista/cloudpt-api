@@ -47,7 +47,7 @@ describe Cloudpt::API::Connection do
       response = mock :code => 500, :body => '{ "a":1}'
       lambda do
         @connection.request { response }
-      end.should raise_error(Cloudpt::API::Error)
+      end.should raise_error(Cloudpt::API::Error::ServerError)
     end
 
     it "raises a Cloudpt::API::Error when the response is a 400" do

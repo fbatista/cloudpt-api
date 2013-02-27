@@ -209,7 +209,7 @@ describe Cloudpt::API::Client do
     end
 
     it "returns the files that have changed since the cursor was made" do
-      filename = "#{Cloudpt::Spec.test_dir}/delta-test-#{Cloudpt::Spec.namespace}.txt"
+      filename = "#{Cloudpt::Spec.test_dir}/delta-test_add-#{Cloudpt::Spec.namespace}.txt"
       delete_filename = "#{Cloudpt::Spec.test_dir}/delta-test-delete-#{Cloudpt::Spec.namespace}.txt"
       @client.upload delete_filename, 'Some file'
       response = @client.delta

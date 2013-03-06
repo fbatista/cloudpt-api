@@ -129,6 +129,8 @@ end
 Cloudpt::API::Client methods
 ----------------------------
 
+### In case of any doubt, check out the specs under the /spec folder. Moste of the times the issue will be related to the missing of a leading slash or a missing paramater.
+
 ### Cloudpt::API::Client#account
 
 Returns a simple object with information about the account:

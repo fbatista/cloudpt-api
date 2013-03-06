@@ -47,7 +47,7 @@ describe Cloudpt::API::File do
 
     it "retrieves all revisions as an Array of File objects" do
       sleep(2)
-      @client.upload @file.path, "Updated content", {'overwrite' => true, :method => :post}
+      @client.upload @file.path, "Updated content", {'overwrite' => true, :method => :post, 'parent_rev' => @file.rev}
       #FAIL AT SERVER ?
       revisions = @file.revisions
       revisions.size.should == 2
@@ -61,10 +61,11 @@ describe Cloudpt::API::File do
     it "restores the file to a specific revision" do
       old_rev = @file.rev
 
-      @client.upload @file.path, "Updated content"
+      @client.upload @file.path, "Updated content", {'overwrite' => true, :method => :post, 'parent_rev' => old_rev}
 
       file = @filename.split('/').last
-
+      
+      sleep(2)
       found = @client.find(@file.path)
 
       found.rev.should_not == old_rev
@@ -73,6 +74,7 @@ describe Cloudpt::API::File do
 
       @file.restore(old_rev)
 
+      sleep(2)
       found = @client.find(@file.path)
 
       found.rev.should_not == old_rev

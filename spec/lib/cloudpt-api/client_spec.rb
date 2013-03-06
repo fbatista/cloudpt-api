@@ -170,12 +170,12 @@ describe Cloudpt::API::Client do
       response = @client.search "searchable-test-copy-#{Cloudpt::Spec.namespace}", :path => "#{Cloudpt::Spec.test_dir}"
       ref = response.first.copy_ref
       ref.should_not == nil
-      the_copy_ref = ref['copy-ref']
+      the_copy_ref = ref['copy_ref']
       the_copy_ref.should_not == nil
-      @client.copy_from_copy_ref the_copy_ref, "#{filename}.copied"
+      @client.copy_from_copy_ref the_copy_ref, "/#{filename}.copied", {:from_path => "/#{filename}"}
       sleep(2)
-      response = @client.search "searchable-test-copy-#{Cloudpt::Spec.namespace}.txt.copied", :path => "#{Cloudpt::Spec.test_dir}"
-      response.size.should == 1
+      response = @client.search "searchable-test-copy-#{Cloudpt::Spec.namespace}", :path => "#{Cloudpt::Spec.test_dir}"
+      response.size.should == 2
       response.first.class.should == Cloudpt::API::File
     end
 
